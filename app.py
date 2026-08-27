@@ -9,8 +9,13 @@ st.set_page_config(
 )
 
 st.title("US Fiscal Stress Dashboard")
-st.write("Austrian / Fiscal / Monetary Stress Monitor")
+st.markdown("""
+The topic of US public debt and rising Treasury yields has increasingly moved to the forefront of economic and financial debate.
 
+US Treasury yields have risen considerably from the exceptionally low levels that characterized much of the post-Global Financial Crisis period. This raises an important question: **what is driving the increase in long-term borrowing costs?**
+
+This dashboard examines several possible explanations, including inflation expectations, real interest rates, the term premium, Treasury supply, fiscal conditions, and monetary policy.
+""")
 @st.cache_data(ttl=3600)
 def load_fred_series(series_id):
     url = f"https://fred.stlouisfed.org/graph/fredgraph.csv?id={series_id}"
