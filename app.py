@@ -31,7 +31,41 @@ def load_fred_series(series_id):
 
     return df.dropna()
 
+dgs2 = load_fred_series("DGS2")
+dgs10 = load_fred_series("DGS10")
 dgs30 = load_fred_series("DGS30")
 
-st.subheader("30-Year Treasury Yield")
-st.dataframe(dgs30.tail(10))
+treasury = (
+    dgs2
+    .merge(dgs10, on="date", how="outer")
+    .merge(dgs30, on="date", how="outer")
+    .sort_values("date")
+)
+
+st.header("1. US Treasury Yields")
+
+st.markdown("""
+Treasury yields represent the market's required return for lending to the US government across different maturities.
+
+Comparing short-, medium-, and long-term yields helps distinguish changes in near-term monetary policy expectations from changes in longer-term inflation, growth, and risk expectations.
+""")
+
+chart_data = treasury.set_index("date")[["DGS2", "DGS10", "DGS30"]].rename(
+    columns={
+        "DGS2": "2-Year",
+        "DGS10": "10-Year",
+        "DGS30": "30-Year"
+    }
+)
+
+
+st.line_chart(
+    chart_data,
+    y_label="Yield (%)",
+    x_label="Date"
+)
+with st.expander("View underlying data"):
+    st.dataframe(
+        chart_data.sort_index(ascending=False),
+        use_container_width=True
+    )
